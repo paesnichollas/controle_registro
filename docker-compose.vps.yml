@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: controle_db_vps
+    environment:
+      POSTGRES_DB: controle_registro_prod
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data_vps:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - "127.0.0.1:5432:5432"  # Restringir acesso apenas local
+    networks:
+      - controle_network_vps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    container_name: controle_redis_vps
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+    volumes:
+      - redis_data_vps:/data
+    ports:
+      - "127.0.0.1:6379:6379"  # Restringir acesso apenas local
+    networks:
+      - controle_network_vps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend Django (VPS)
+  backend:
+    build:
+      context: ./api_django
+      dockerfile: Dockerfile
+    container_name: controle_backend_vps
+    environment:
+      - DEBUG=False
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/controle_registro_prod
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,seu-dominio.com}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS:-http://localhost,https://seu-dominio.com}
+    volumes:
+      - static_files_vps:/app/staticfiles
+      - media_files_vps:/app/media
+      - ./logs:/app/logs
+    ports:
+      - "127.0.0.1:8000:8000"  # Restringir acesso apenas local
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - controle_network_vps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    command: >
+      sh -c "python manage.py migrate &&
+              python manage.py collectstatic --noinput &&
+              gunicorn setup.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120 --max-requests 1000 --max-requests-jitter 100"
+
+  # Frontend React (VPS)
+  frontend:
+    build:
+      context: ./frontend_react
+      dockerfile: Dockerfile
+    container_name: controle_frontend_vps
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api}
+      - VITE_AUTH_URL=${VITE_AUTH_URL:-http://localhost:8000/api/auth}
+    volumes:
+      - static_files_frontend_vps:/usr/share/nginx/html
+    networks:
+      - controle_network_vps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx (VPS)
+  nginx:
+    image: nginx:alpine
+    container_name: controle_nginx_vps
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.vps.conf:/etc/nginx/nginx.conf
+      - static_files_vps:/usr/share/nginx/html/static:ro
+      - media_files_vps:/usr/share/nginx/html/media:ro
+      - static_files_frontend_vps:/usr/share/nginx/html:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    networks:
+      - controle_network_vps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data_vps:
+  redis_data_vps:
+  static_files_vps:
+  media_files_vps:
+  static_files_frontend_vps:
+
+networks:
+  controle_network_vps:
+    driver: bridge

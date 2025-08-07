@@ -89,6 +89,9 @@ if not DEBUG:  # Produção
         "https://controle-front-mu.vercel.app",
         "https://app--emissao-de-as-d7c9848c.base44.app",
         "https://app--service-flow-cbed97ac.base44.app",
+        "https://seu-dominio.com",  # Substitua pelo seu domínio real
+        "http://localhost",
+        "http://127.0.0.1",
     ]
 else:  # Desenvolvimento
     CORS_ALLOW_ALL_ORIGINS = True
@@ -132,14 +135,17 @@ else:
     # Para produção, usar PostgreSQL
     db_config = dj_database_url.config(default=os.environ.get('DATABASE_URL'))
     
-    # Adicionar configurações SSL para PostgreSQL
+    # Configurações otimizadas para VPS
     if db_config.get('ENGINE') == 'django.db.backends.postgresql':
         db_config['OPTIONS'] = {
-            'sslmode': 'require',
-            'sslrootcert': None,
-            'sslcert': None,
-            'sslkey': None,
+            'sslmode': 'disable',  # Desabilitar SSL para conexão local
+            'connect_timeout': 10,
+            'application_name': 'controle_registro',
         }
+        
+        # Configurações de pool de conexões para VPS
+        db_config['CONN_MAX_AGE'] = 600  # 10 minutos
+        db_config['OPTIONS']['MAX_CONNS'] = 20
     
     DATABASES = {
         'default': db_config
@@ -303,6 +309,9 @@ CSRF_TRUSTED_ORIGINS = [
     'https://controle-front-mu.vercel.app',
     'https://app--emissao-de-as-d7c9848c.base44.app',
     'https://app--service-flow-cbed97ac.base44.app',
+    'https://seu-dominio.com',  # Substitua pelo seu domínio real
+    'http://localhost',
+    'http://127.0.0.1',
 ]
 
 # Spectacular configuration for API documentation
