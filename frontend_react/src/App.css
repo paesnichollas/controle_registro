@@ -1,0 +1,460 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: #1e1f24; /* Fundo geral escuro */
+  --foreground: #fff; /* Texto primário */
+  --card: #2a2b30; /* Cards/boxes internos */
+  --card-foreground: #fff;
+  --popover: #2a2b30;
+  --popover-foreground: #fff;
+  --primary: #06b6d4; /* Títulos de bloco: cyan-400 */
+  --primary-foreground: #fff;
+  --secondary: #38bdf8; /* sky-400 */
+  --secondary-foreground: #fff;
+  --muted: #374151; /* slate-700 */
+  --muted-foreground: #d1d5db; /* gray-300 */
+  --accent: #22d3ee; /* cyan-400 */
+  --accent-foreground: #fff;
+  --destructive: #dc2626; /* red-600 */
+  --border: #374151; /* slate-700 */
+  --input: #18181b; /* zinc-900 */
+  --ring: #38bdf8; /* sky-400 */
+  --chart-1: #06b6d4;
+  --chart-2: #38bdf8;
+  --chart-3: #2a2b30;
+  --chart-4: #22d3ee;
+  --chart-5: #16a34a; /* green-600 */
+  --sidebar: #15161b; /* menu lateral */
+  --sidebar-foreground: #f3f4f6; /* gray-100 */
+  --sidebar-primary: #06b6d4;
+  --sidebar-primary-foreground: #fff;
+  --sidebar-accent: #38bdf8;
+  --sidebar-accent-foreground: #fff;
+  --sidebar-border: #374151;
+  --sidebar-ring: #38bdf8;
+}
+
+.dark {
+  --background: #1e1f24; /* Fundo geral escuro */
+  --foreground: #fff; /* Texto primário */
+  --card: #2a2b30; /* Cards/boxes internos */
+  --card-foreground: #fff;
+  --popover: #2a2b30;
+  --popover-foreground: #fff;
+  --primary: #06b6d4; /* Títulos de bloco: cyan-400 */
+  --primary-foreground: #fff;
+  --secondary: #38bdf8; /* sky-400 */
+  --secondary-foreground: #fff;
+  --muted: #374151; /* slate-700 */
+  --muted-foreground: #d1d5db; /* gray-300 */
+  --accent: #22d3ee; /* cyan-400 */
+  --accent-foreground: #fff;
+  --destructive: #dc2626; /* red-600 */
+  --border: #374151; /* slate-700 */
+  --input: #18181b; /* zinc-900 */
+  --ring: #38bdf8; /* sky-400 */
+  --chart-1: #06b6d4;
+  --chart-2: #38bdf8;
+  --chart-3: #2a2b30;
+  --chart-4: #22d3ee;
+  --chart-5: #16a34a; /* green-600 */
+  --sidebar: #15161b; /* menu lateral */
+  --sidebar-foreground: #f3f4f6; /* gray-100 */
+  --sidebar-primary: #06b6d4;
+  --sidebar-primary-foreground: #fff;
+  --sidebar-accent: #38bdf8;
+  --sidebar-accent-foreground: #fff;
+  --sidebar-border: #374151;
+  --sidebar-ring: #38bdf8;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ====== CONTROLE DE QUALIDADE (BLOCO) ====== */
+.cq-formset-block {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.cq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+}
+@media (max-width: 768px) {
+  .cq-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+.cq-field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.cq-label {
+  width: 100%;
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 0.97rem;
+  color: #e5e7eb;
+}
+.cq-input > * {
+  width: 100% !important;
+  min-height: 38px !important;
+  box-sizing: border-box !important;
+  margin: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  max-width: none !important;
+  flex-basis: auto !important;
+}
+.cq-input input,
+.cq-input select,
+.cq-input textarea {
+  width: 100% !important;
+  min-height: 38px !important;
+  box-sizing: border-box !important;
+  margin: 0;
+  max-width: none !important;
+  flex-basis: auto !important;
+}
+.cq-input textarea {
+  resize: vertical;
+}
+/* Fieldset visual opcional para agrupamento */
+.cq-formset-block fieldset {
+  border: 1px solid var(--color-border, #374151);
+  border-radius: 8px;
+  padding: 12px 16px 8px 16px;
+  margin-bottom: 0;
+}
+.cq-formset-block legend {
+  font-size: 1rem;
+  color: var(--primary, #06b6d4);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* ====== AJUSTES SOLICITADOS PELO USUÁRIO ====== */
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.documentos-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+}
+
+.linha-formset {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+.linha-formset .campo {
+  flex: 1;
+  min-width: 200px;
+  width: 100%;
+}
+.linha-formset .campo select,
+.linha-formset .campo .bg-slate-800,
+.linha-formset .campo .bg-\[\#23242a\] {
+  width: 100% !important;
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+}
+@media (max-width: 900px) {
+  .linha-formset {
+    flex-wrap: wrap;
+  }
+}
+
+/* ====== ESTILOS ESPECÍFICOS PARA O BLOCO 8 - STATUS E ASSINATURAS ====== */
+
+/* Container dos selects do topo */
+.bloco-8-top-selects {
+  width: 100%;
+}
+
+/* Garantir que o primeiro select (Status da OS) tenha a mesma largura dos outros */
+.bloco-8-top-selects .bloco-8-select-item {
+  width: 100% !important;
+  max-width: 296px !important; /* Mesma largura do Status da OS Eletrônica */
+  min-width: 296px !important;
+}
+
+/* Item individual dos selects - largura baseada no Status da OS Eletrônica */
+.bloco-8-select-item {
+  width: 100%;
+  max-width: 296px; /* Largura base para todos os selects - mesma do Status da OS Eletrônica */
+  min-width: 296px;
+}
+
+/* Linha com Status da OS Manual e Data de Aprovação */
+.bloco-8-manual-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.bloco-8-manual-row .bloco-8-select-item {
+  flex-shrink: 0; /* Impede que o select encolha */
+  width: 296px; /* Mesma largura do Status da OS Eletrônica */
+  max-width: 296px;
+  min-width: 296px;
+}
+
+/* Garantir que todos os selects tenham a mesma altura e largura */
+.bloco-8-select-item .select-trigger,
+.bloco-8-select-item [data-slot="select-trigger"],
+.bloco-8-select-item button[role="combobox"] {
+  height: 36px !important; /* Altura fixa baseada no h-9 do Tailwind */
+  min-height: 36px !important;
+  width: 100% !important; /* Garantir que ocupe toda a largura disponível */
+  min-width: 296px !important; /* Largura mínima baseada no Status da OS Eletrônica */
+  max-width: 296px !important; /* Largura máxima para manter consistência */
+}
+
+/* Garantir que os containers dos selects tenham a mesma largura */
+.bloco-8-select-item {
+  width: 100% !important;
+  max-width: 296px !important;
+  min-width: 296px !important;
+}
+
+/* Campo de data que expande - deve ter a mesma largura dos campos de data do grid */
+.bloco-8-expandable-field {
+  flex: 1; /* Ocupa todo o espaço restante */
+  min-width: 0; /* Permite que o campo encolha se necessário */
+}
+
+/* Garantir que os campos de data tenham exatamente a mesma largura */
+.bloco-8-date-field {
+  width: 100%;
+  min-width: 296px;
+  max-width: 296px;
+}
+
+/* Forçar que os campos de data no flexbox tenham a mesma largura dos campos no grid */
+.bloco-8-manual-row .bloco-8-date-field {
+  flex: none; /* Remove o flex para usar largura fixa */
+  width: 296px; /* Mesma largura do select de Status da OS Eletrônica */
+  max-width: 296px;
+  min-width: 296px;
+}
+
+/* Grid para a linha com Status da OS Eletrônica e campos dependentes */
+.bloco-8-grid-row {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+}
+
+.bloco-8-grid-row-3 {
+  grid-template-columns: 296px 296px 1fr; /* Largura fixa para os dois primeiros campos, flexível para o terceiro */
+}
+
+/* Garantir que o primeiro item do grid (Status da OS Eletrônica) tenha a mesma largura dos outros selects */
+.bloco-8-grid-row-3 .bloco-8-select-item {
+  width: 100% !important;
+  max-width: 296px !important;
+  min-width: 296px !important;
+}
+
+
+
+.bloco-8-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 1024px) {
+  .bloco-8-grid-row-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .bloco-8-manual-row {
+    flex-direction: column;
+  }
+  
+  .bloco-8-manual-row .bloco-8-select-item {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .bloco-8-manual-row .bloco-8-date-field {
+    width: 100%;
+    flex: none;
+  }
+  
+  .bloco-8-select-item {
+    max-width: 100%;
+  }
+  
+  .bloco-8-date-field {
+    width: 100%;
+  }
+}
+
+/* ====== ESTILOS PARA NOTIFICAÇÕES ====== */
+.toaster {
+  --toast-bg: #2a2b30;
+  --toast-text: #ffffff;
+  --toast-border: 1px solid #374151;
+}
+
+/* Animações personalizadas para as notificações */
+.toaster [data-sonner-toast] {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.toaster [data-sonner-toast][data-state="closed"] {
+  animation: slideOutToTop 0.3s ease-in;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutToTop {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+/* Estilos específicos para cada tipo de notificação */
+.toaster [data-sonner-toast][data-type="success"] {
+  background: #22c55e !important;
+  color: #ffffff !important;
+  border: 1px solid #16a34a !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2) !important;
+}
+
+.toaster [data-sonner-toast][data-type="error"] {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border: 1px solid #dc2626 !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+}
+
+.toaster [data-sonner-toast][data-type="warning"] {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+  border: 1px solid #d97706 !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+}
+
+.toaster [data-sonner-toast][data-type="info"] {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border: 1px solid #2563eb !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Melhorar a legibilidade do texto */
+.toaster [data-sonner-toast] [data-description] {
+  font-weight: 500 !important;
+  text-align: center !important;
+  line-height: 1.4 !important;
+}
+
+/* Estilo para o botão de fechar */
+.toaster [data-sonner-toast] [data-close-button] {
+  color: #ffffff !important;
+  opacity: 0.8 !important;
+  transition: opacity 0.2s ease !important;
+}
+
+.toaster [data-sonner-toast] [data-close-button]:hover {
+  opacity: 1 !important;
+}
+
+/* Garantir que as notificações não sobreponham outros elementos */
+.toaster {
+  z-index: 9999 !important;
+  pointer-events: none !important;
+}
+
+.toaster [data-sonner-toast] {
+  pointer-events: auto !important;
+}

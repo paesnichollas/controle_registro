@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: controle_db_prod
+    environment:
+      POSTGRES_DB: controle_registro_prod
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - controle_network_prod
+    restart: unless-stopped
+
+  # Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    container_name: controle_redis_prod
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data_prod:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - controle_network_prod
+    restart: unless-stopped
+
+  # Backend Django (Produção)
+  backend:
+    build:
+      context: ./api_django
+      dockerfile: Dockerfile
+    container_name: controle_backend_prod
+    environment:
+      - DEBUG=False
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/controle_registro_prod
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+    volumes:
+      - static_files_prod:/app/staticfiles
+      - media_files_prod:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - controle_network_prod
+    restart: unless-stopped
+    command: >
+      sh -c "python manage.py migrate &&
+              python manage.py collectstatic --noinput &&
+              gunicorn setup.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120"
+
+  # Frontend React (Produção)
+  frontend:
+    build:
+      context: ./frontend_react
+      dockerfile: Dockerfile
+    container_name: controle_frontend_prod
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api}
+      - VITE_AUTH_URL=${VITE_AUTH_URL:-http://localhost:8000/api/auth}
+    volumes:
+      - static_files_frontend_prod:/usr/share/nginx/html
+    networks:
+      - controle_network_prod
+    restart: unless-stopped
+
+  # Nginx (Produção)
+  nginx:
+    image: nginx:alpine
+    container_name: controle_nginx_prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_files_prod:/usr/share/nginx/html/static:ro
+      - media_files_prod:/usr/share/nginx/html/media:ro
+      - static_files_frontend_prod:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - controle_network_prod
+    restart: unless-stopped
+
+volumes:
+  postgres_data_prod:
+  redis_data_prod:
+  static_files_prod:
+  media_files_prod:
+  static_files_frontend_prod:
+
+networks:
+  controle_network_prod:
+    driver: bridge

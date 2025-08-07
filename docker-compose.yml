@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: controle_db
+    environment:
+      POSTGRES_DB: controle_registro
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - controle_network
+
+  # Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    container_name: controle_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - controle_network
+
+  # Backend Django
+  backend:
+    build:
+      context: ./api_django
+      dockerfile: Dockerfile
+    container_name: controle_backend
+    environment:
+      - DEBUG=False
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/controle_registro
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-your-secret-key-here}
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+    volumes:
+      - ./api_django:/app
+      - static_files:/app/staticfiles
+      - media_files:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - controle_network
+    command: >
+      sh -c "python manage.py migrate &&
+              python manage.py collectstatic --noinput &&
+              gunicorn setup.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend_react
+      dockerfile: Dockerfile
+    container_name: controle_frontend
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+      - VITE_AUTH_URL=http://localhost:8000/api/auth
+    volumes:
+      - ./frontend_react:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - controle_network
+    command: npm run dev
+
+  # Nginx (Produção)
+  nginx:
+    image: nginx:alpine
+    container_name: controle_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_files:/usr/share/nginx/html/static:ro
+      - media_files:/usr/share/nginx/html/media:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - controle_network
+
+volumes:
+  postgres_data:
+  static_files:
+  media_files:
+
+networks:
+  controle_network:
+    driver: bridge

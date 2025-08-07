@@ -1,0 +1,243 @@
+#!/bin/bash
+
+# =============================================================================
+# SCRIPT: exemplo-uso.sh
+# DESCRIÇÃO: Exemplo de uso dos scripts de desenvolvimento
+# USO: ./exemplo-uso.sh
+# AUTOR: Sistema de Automação
+# =============================================================================
+
+echo "🚀 EXEMPLO DE USO DOS SCRIPTS DE DESENVOLVIMENTO"
+echo "=================================================="
+echo ""
+
+echo "📋 ESTE É UM EXEMPLO DE COMO USAR OS SCRIPTS"
+echo "=============================================="
+echo ""
+
+echo "🎯 OBJETIVO:"
+echo "   Automatizar testes do sistema Django + React"
+echo "   Garantir que tudo funciona antes da produção"
+echo "   Facilitar uso para desenvolvedores júnior"
+echo ""
+
+echo "📁 SCRIPTS CRIADOS:"
+echo "==================="
+echo "✅ 01-instalar-docker.sh - Instala Docker"
+echo "✅ 02-configurar-projeto.sh - Configura projeto"
+echo "✅ 03-verificar-compose.sh - Verifica docker-compose"
+echo "✅ 04-subir-ambiente.sh - Sobe containers"
+echo "✅ 05-testar-acesso.sh - Testa conectividade"
+echo "✅ 06-backup-local.sh - Cria backups"
+echo "✅ 07-restore-local.sh - Restaura backups"
+echo "✅ 08-limpeza-sistema.sh - Limpa sistema"
+echo "✅ 09-testes-falha.sh - Testa resiliência"
+echo "✅ 10-checklist-final.sh - Checklist completo"
+echo "✅ testa-tudo.sh - Executa todos os testes"
+echo ""
+
+echo "🚀 COMO USAR:"
+echo "============="
+echo ""
+
+echo "1️⃣  EXECUÇÃO COMPLETA (RECOMENDADO):"
+echo "   ./scripts/scripts-dev/testa-tudo.sh dev"
+echo "   ./scripts/scripts-dev/testa-tudo.sh prod"
+echo ""
+
+echo "2️⃣  EXECUÇÃO INDIVIDUAL:"
+echo "   # Instalar Docker"
+echo "   ./scripts/scripts-dev/01-instalar-docker.sh"
+echo "   "
+echo "   # Configurar projeto"
+echo "   ./scripts/scripts-dev/02-configurar-projeto.sh"
+echo "   "
+echo "   # Subir ambiente"
+echo "   ./scripts/scripts-dev/04-subir-ambiente.sh dev"
+echo "   "
+echo "   # Testar acesso"
+echo "   ./scripts/scripts-dev/05-testar-acesso.sh dev"
+echo "   "
+echo "   # Fazer backup"
+echo "   ./scripts/scripts-dev/06-backup-local.sh dev"
+echo "   "
+echo "   # Checklist final"
+echo "   ./scripts/scripts-dev/10-checklist-final.sh dev"
+echo ""
+
+echo "📊 O QUE CADA SCRIPT FAZ:"
+echo "========================"
+echo ""
+
+echo "🔧 CONFIGURAÇÃO:"
+echo "   - 01-instalar-docker.sh: Instala Docker e Docker Compose"
+echo "   - 02-configurar-projeto.sh: Configura .env, SSL e estrutura"
+echo "   - 03-verificar-compose.sh: Valida arquivos docker-compose"
+echo ""
+
+echo "🚀 EXECUÇÃO:"
+echo "   - 04-subir-ambiente.sh: Sobe containers e executa migrações"
+echo "   - 05-testar-acesso.sh: Testa conectividade e endpoints"
+echo ""
+
+echo "💾 BACKUP:"
+echo "   - 06-backup-local.sh: Cria backup completo (banco + mídia)"
+echo "   - 07-restore-local.sh: Restaura backup e testa integridade"
+echo ""
+
+echo "🧹 MANUTENÇÃO:"
+echo "   - 08-limpeza-sistema.sh: Limpa logs, imagens e volumes"
+echo "   - 09-testes-falha.sh: Testa resiliência do sistema"
+echo "   - 10-checklist-final.sh: Checklist completo automatizado"
+echo ""
+
+echo "🎯 SCRIPT PRINCIPAL:"
+echo "   - testa-tudo.sh: Executa todos os testes em sequência"
+echo ""
+
+echo "🔧 TROUBLESHOOTING:"
+echo "=================="
+echo ""
+
+echo "❌ PROBLEMAS COMUNS:"
+echo "   - Docker não instalado: Execute 01-instalar-docker.sh"
+echo "   - Arquivo .env não existe: Execute 02-configurar-projeto.sh"
+echo "   - Containers não sobem: Execute 03-verificar-compose.sh"
+echo "   - Portas em uso: Verifique com netstat -tuln"
+echo "   - Permissões: Execute chmod +x scripts/scripts-dev/*.sh"
+echo ""
+
+echo "📋 LOGS ÚTEIS:"
+echo "   - docker-compose -f docker-compose.dev.yml logs -f"
+echo "   - docker-compose -f docker-compose.dev.yml logs backend"
+echo "   - docker-compose -f docker-compose.dev.yml ps"
+echo ""
+
+echo "🔐 SEGURANÇA:"
+echo "============"
+echo ""
+
+echo "⚠️  CONFIGURAÇÕES IMPORTANTES:"
+echo "   - Configure SECRET_KEY forte no .env"
+echo "   - Use senhas fortes para POSTGRES_PASSWORD"
+echo "   - Configure DJANGO_SUPERUSER_PASSWORD"
+echo "   - Mantenha .env com permissões restritas (chmod 600)"
+echo ""
+
+echo "🤖 AUTOMAÇÃO:"
+echo "============"
+echo ""
+
+echo "📅 CRONTAB PARA BACKUPS:"
+echo "   # Backup diário às 2h"
+echo "   0 2 * * * /caminho/para/projeto/scripts/scripts-dev/06-backup-local.sh prod"
+echo "   "
+echo "   # Limpeza semanal aos domingos às 3h"
+echo "   0 3 * * 0 /caminho/para/projeto/scripts/scripts-dev/08-limpeza-sistema.sh prod"
+echo "   "
+echo "   # Checklist semanal às segundas às 6h"
+echo "   0 6 * * 1 /caminho/para/projeto/scripts/scripts-dev/10-checklist-final.sh prod"
+echo ""
+
+echo "📊 RELATÓRIOS:"
+echo "============="
+echo ""
+
+echo "📄 RELATÓRIOS GERADOS:"
+echo "   - teste_completo_[ambiente]_[data].txt"
+echo "   - backups/[ambiente]/backup_[ambiente]_[data]_complete.tar.gz"
+echo "   - Logs detalhados em cada script"
+echo ""
+
+echo "🎯 RESULTADOS ESPERADOS:"
+echo "======================="
+echo ""
+
+echo "✅ SUCESSO (100%):"
+echo "   - Todos os testes passaram"
+echo "   - Sistema pronto para produção"
+echo "   - Pode prosseguir com confiança"
+echo ""
+
+echo "⚠️  ATENÇÃO (80-99%):"
+echo "   - Maioria dos testes passou"
+echo "   - Sistema estável para uso"
+echo "   - Revise os itens que falharam"
+echo ""
+
+echo "❌ PROBLEMAS (60-79%):"
+echo "   - Alguns testes falharam"
+echo "   - Corrija os problemas antes de usar"
+echo "   - Execute os testes novamente"
+echo ""
+
+echo "🚨 CRÍTICO (<60%):"
+echo "   - Muitos testes falharam"
+echo "   - Corrija os problemas críticos"
+echo "   - Verifique configurações básicas"
+echo ""
+
+echo "💡 DICAS IMPORTANTES:"
+echo "===================="
+echo ""
+
+echo "🎯 PARA DESENVOLVEDORES JÚNIOR:"
+echo "   1. Execute testa-tudo.sh primeiro"
+echo "   2. Leia as mensagens de erro cuidadosamente"
+echo "   3. Use o README.md para troubleshooting"
+echo "   4. Execute scripts individuais se necessário"
+echo "   5. Mantenha backups regulares"
+echo ""
+
+echo "🔧 PARA DEVS MAIS EXPERIENTES:"
+echo "   1. Personalize scripts conforme necessário"
+echo "   2. Configure automação com crontab"
+echo "   3. Monitore logs e performance"
+echo "   4. Configure alertas automáticos"
+echo "   5. Documente mudanças importantes"
+echo ""
+
+echo "🚀 PRÓXIMOS PASSOS:"
+echo "=================="
+echo ""
+
+echo "1️⃣  EXECUTE O TESTE COMPLETO:"
+echo "   ./scripts/scripts-dev/testa-tudo.sh dev"
+echo ""
+
+echo "2️⃣  CONFIGURE AUTOMAÇÃO:"
+echo "   - Adicione scripts ao crontab"
+echo "   - Configure monitoramento contínuo"
+echo "   - Configure alertas de disco"
+echo ""
+
+echo "3️⃣  MONITORE REGULARMENTE:"
+echo "   - Execute checklist semanal"
+echo "   - Faça backups regulares"
+echo "   - Verifique logs de erro"
+echo ""
+
+echo "4️⃣  DOCUMENTE MUDANÇAS:"
+echo "   - Mantenha README atualizado"
+echo "   - Documente configurações especiais"
+echo "   - Registre problemas e soluções"
+echo ""
+
+echo "🎉 SISTEMA PRONTO!"
+echo "=================="
+echo ""
+
+echo "✅ Todos os scripts foram criados com sucesso"
+echo "✅ Permissões de execução configuradas"
+echo "✅ Documentação completa disponível"
+echo "✅ Sistema pronto para testes automatizados"
+echo ""
+
+echo "📞 SUPORTE:"
+echo "   - Consulte README.md para troubleshooting"
+echo "   - Execute 10-checklist-final.sh para diagnóstico"
+echo "   - Verifique logs com docker-compose logs"
+echo ""
+
+echo "🚀 BOA SORTE COM SEU PROJETO!"
+echo "==============================" 
