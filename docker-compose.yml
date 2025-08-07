@@ -60,7 +60,7 @@ services:
       dockerfile: Dockerfile
     container_name: controle_frontend
     environment:
-      - VITE_API_URL=http://localhost:8000/api
+      - VITE_API_URL=http://localhost:8000
       - VITE_AUTH_URL=http://localhost:8000/api/auth
     volumes:
       - ./frontend_react:/app

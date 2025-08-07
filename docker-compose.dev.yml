@@ -60,7 +60,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: controle_frontend_dev
     environment:
-      - VITE_API_URL=http://localhost:8000/api
+      - VITE_API_URL=http://localhost:8000
       - VITE_AUTH_URL=http://localhost:8000/api/auth
       - CHOKIDAR_USEPOLLING=true
     volumes:
